@@ -21,6 +21,14 @@ class VisualMapApp {
     this.initEvents();
     this.renderMapChips();
     this.loadCurrentMap();
+
+    // Auto-recalculate on window resize
+    window.addEventListener("resize", () => {
+      if (this.currentView === "mindmap") {
+        const mapData = MINDMAPS_DATA.find(m => m.id === this.currentMapId);
+        if (mapData) this.renderMindMapSVG(mapData.rootNode);
+      }
+    });
   }
 
   initElements() {
@@ -104,12 +112,12 @@ class VisualMapApp {
 
     // Canvas zoom buttons
     document.getElementById("zoom-in-btn")?.addEventListener("click", () => {
-      this.zoomLevel = Math.min(2.5, this.zoomLevel * 1.2);
+      this.zoomLevel = Math.min(2.5, this.zoomLevel * 1.25);
       this.updateCanvasTransform();
     });
 
     document.getElementById("zoom-out-btn")?.addEventListener("click", () => {
-      this.zoomLevel = Math.max(0.4, this.zoomLevel / 1.2);
+      this.zoomLevel = Math.max(0.4, this.zoomLevel / 1.25);
       this.updateCanvasTransform();
     });
 
@@ -204,11 +212,11 @@ class VisualMapApp {
     this.loadCurrentMap();
   }
 
-  // Visual SVG Tree Rendering Engine
+  // Visual SVG Tree Rendering Engine with Responsive Screen Fitting
   renderMindMapSVG(rootNode) {
     this.svg.innerHTML = "";
-    const width = this.canvasWrapper.clientWidth || 900;
-    const height = this.canvasWrapper.clientHeight || 600;
+    const width = this.canvasWrapper.clientWidth || window.innerWidth || 390;
+    const height = this.canvasWrapper.clientHeight || 500;
 
     const viewport = document.createElementNS("http://www.w3.org/2000/svg", "g");
     viewport.setAttribute("id", "svg-viewport");
@@ -224,13 +232,17 @@ class VisualMapApp {
     rootNode.y = centerY;
     nodes.push(rootNode);
 
-    const isMobile = window.innerWidth <= 768;
+    const isMobile = width <= 600;
+    
+    // Proportional radius calculations based on viewport width
+    const level1Radius = isMobile ? Math.min(width * 0.32, 115) : 210;
+    const level2Radius = isMobile ? Math.min(width * 0.52, 175) : 170;
 
     const processChildren = (parent, depth = 1, startAngle = 0, angleRange = Math.PI * 2) => {
       if (!parent.children || parent.children.length === 0) return;
 
       const childCount = parent.children.length;
-      const radius = isMobile ? (depth === 1 ? 160 : 130) : (depth === 1 ? 220 : 180);
+      const radius = depth === 1 ? level1Radius : level2Radius;
       const angleStep = angleRange / childCount;
 
       parent.children.forEach((child, idx) => {
@@ -241,7 +253,7 @@ class VisualMapApp {
         nodes.push(child);
         links.push({ source: parent, target: child, color: child.color || parent.color || "#6366f1" });
 
-        const nextRange = angleStep * 0.8;
+        const nextRange = angleStep * 0.85;
         const nextStart = angle - nextRange / 2;
         processChildren(child, depth + 1, nextStart, nextRange);
       });
@@ -252,13 +264,13 @@ class VisualMapApp {
     // Draw SVG Connecting Lines
     links.forEach(link => {
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      const d = `M ${link.source.x} ${link.source.y} Q ${(link.source.x + link.target.x)/2 + 20} ${(link.source.y + link.target.y)/2 - 20}, ${link.target.x} ${link.target.y}`;
+      const d = `M ${link.source.x} ${link.source.y} Q ${(link.source.x + link.target.x)/2} ${(link.source.y + link.target.y)/2}, ${link.target.x} ${link.target.y}`;
       path.setAttribute("d", d);
       path.setAttribute("stroke", link.color);
-      path.setAttribute("stroke-width", "3");
-      path.setAttribute("stroke-opacity", "0.6");
+      path.setAttribute("stroke-width", isMobile ? "2" : "3");
+      path.setAttribute("stroke-opacity", "0.65");
       path.setAttribute("fill", "none");
-      path.setAttribute("stroke-dasharray", "6,6");
+      path.setAttribute("stroke-dasharray", "5,5");
       viewport.appendChild(path);
     });
 
@@ -271,32 +283,34 @@ class VisualMapApp {
 
       const nodeColor = node.color || "#6366f1";
       const isRoot = node.type === "root";
-      const circleRadius = isMobile ? (isRoot ? 38 : (node.children ? 30 : 24)) : (isRoot ? 45 : (node.children ? 35 : 28));
+      const circleRadius = isMobile ? (isRoot ? 32 : (node.children ? 26 : 22)) : (isRoot ? 45 : (node.children ? 35 : 28));
 
       const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       circle.setAttribute("r", circleRadius);
       circle.setAttribute("fill", nodeColor);
       circle.setAttribute("fill-opacity", "0.25");
       circle.setAttribute("stroke", nodeColor);
-      circle.setAttribute("stroke-width", "2.5");
-      circle.setAttribute("filter", "drop-shadow(0px 0px 8px " + nodeColor + ")");
+      circle.setAttribute("stroke-width", isMobile ? "2" : "2.5");
+      circle.setAttribute("filter", "drop-shadow(0px 0px 6px " + nodeColor + ")");
 
       const textEn = document.createElementNS("http://www.w3.org/2000/svg", "text");
       textEn.setAttribute("text-anchor", "middle");
-      textEn.setAttribute("dy", "-2");
+      textEn.setAttribute("dy", "-1");
       textEn.setAttribute("fill", "#ffffff");
       textEn.setAttribute("font-weight", "600");
-      textEn.setAttribute("font-size", isMobile ? (isRoot ? "11" : "9.5") : (isRoot ? "13" : "11"));
+      textEn.setAttribute("font-size", isMobile ? (isRoot ? "10" : "8.5") : (isRoot ? "13" : "11"));
       textEn.setAttribute("font-family", "Outfit, sans-serif");
-      textEn.textContent = node.label.length > (isMobile ? 14 : 18) ? node.label.substring(0, isMobile ? 12 : 16) + '...' : node.label;
+      
+      const maxLen = isMobile ? (isRoot ? 12 : 10) : 16;
+      textEn.textContent = node.label.length > maxLen ? node.label.substring(0, maxLen - 1) + '..' : node.label;
 
       const textEs = document.createElementNS("http://www.w3.org/2000/svg", "text");
       textEs.setAttribute("text-anchor", "middle");
-      textEs.setAttribute("dy", "12");
+      textEs.setAttribute("dy", isMobile ? "10" : "12");
       textEs.setAttribute("fill", "rgba(255,255,255,0.75)");
-      textEs.setAttribute("font-size", isMobile ? "8.5" : "9");
+      textEs.setAttribute("font-size", isMobile ? "7.5" : "9");
       textEs.setAttribute("font-family", "Inter, sans-serif");
-      textEs.textContent = node.labelEs.length > (isMobile ? 14 : 18) ? node.labelEs.substring(0, isMobile ? 12 : 16) + '...' : node.labelEs;
+      textEs.textContent = node.labelEs.length > maxLen ? node.labelEs.substring(0, maxLen - 1) + '..' : node.labelEs;
 
       group.appendChild(circle);
       group.appendChild(textEn);
@@ -305,8 +319,8 @@ class VisualMapApp {
       group.addEventListener("click", (e) => {
         e.stopPropagation();
         this.selectNode(node);
-        document.querySelectorAll(".node-group circle").forEach(c => c.setAttribute("stroke-width", "2.5"));
-        circle.setAttribute("stroke-width", "5");
+        document.querySelectorAll(".node-group circle").forEach(c => c.setAttribute("stroke-width", isMobile ? "2" : "2.5"));
+        circle.setAttribute("stroke-width", isMobile ? "4" : "5");
       });
 
       viewport.appendChild(group);
@@ -477,7 +491,7 @@ class VisualMapApp {
         Pregunta ${this.currentQuizIndex + 1} de ${this.quizQuestions.length}
       </div>
       <div class="quiz-question-box">
-        <h3 style="font-family:var(--font-heading); font-size:1.1rem;">${q.question}</h3>
+        <h3 style="font-family:var(--font-heading); font-size:1.05rem;">${q.question}</h3>
       </div>
       <div class="quiz-options">
         ${q.options.map(opt => `
