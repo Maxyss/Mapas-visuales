@@ -150,7 +150,6 @@ class VisualMapApp {
       btn.addEventListener("click", (e) => {
         this.currentCategory = e.currentTarget.dataset.cat;
         this.renderMapChips();
-        // Select first map of category
         const filteredMaps = this.getFilteredMaps();
         if (filteredMaps.length > 0) {
           this.currentMapId = filteredMaps[0].id;
@@ -191,7 +190,6 @@ class VisualMapApp {
       this.renderCardsGrid(mapData);
     }
 
-    // Default select root node
     this.selectNode(mapData.rootNode);
   }
 
@@ -208,16 +206,14 @@ class VisualMapApp {
 
   // Visual SVG Tree Rendering Engine
   renderMindMapSVG(rootNode) {
-    this.svg.innerHTML = ""; // Clear canvas
+    this.svg.innerHTML = "";
     const width = this.canvasWrapper.clientWidth || 900;
     const height = this.canvasWrapper.clientHeight || 600;
 
-    // Create main viewport SVG group for zooming/panning
     const viewport = document.createElementNS("http://www.w3.org/2000/svg", "g");
     viewport.setAttribute("id", "svg-viewport");
     this.svg.appendChild(viewport);
 
-    // Compute node coordinates recursively
     const nodes = [];
     const links = [];
 
@@ -228,12 +224,13 @@ class VisualMapApp {
     rootNode.y = centerY;
     nodes.push(rootNode);
 
-    // Layout algorithm: Radial / Branching distribution
+    const isMobile = window.innerWidth <= 768;
+
     const processChildren = (parent, depth = 1, startAngle = 0, angleRange = Math.PI * 2) => {
       if (!parent.children || parent.children.length === 0) return;
 
       const childCount = parent.children.length;
-      const radius = depth === 1 ? 220 : 180;
+      const radius = isMobile ? (depth === 1 ? 160 : 130) : (depth === 1 ? 220 : 180);
       const angleStep = angleRange / childCount;
 
       parent.children.forEach((child, idx) => {
@@ -244,7 +241,6 @@ class VisualMapApp {
         nodes.push(child);
         links.push({ source: parent, target: child, color: child.color || parent.color || "#6366f1" });
 
-        // Next level branching
         const nextRange = angleStep * 0.8;
         const nextStart = angle - nextRange / 2;
         processChildren(child, depth + 1, nextStart, nextRange);
@@ -253,7 +249,7 @@ class VisualMapApp {
 
     processChildren(rootNode);
 
-    // 1. Draw SVG Connecting Lines (Bezier curves)
+    // Draw SVG Connecting Lines
     links.forEach(link => {
       const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
       const d = `M ${link.source.x} ${link.source.y} Q ${(link.source.x + link.target.x)/2 + 20} ${(link.source.y + link.target.y)/2 - 20}, ${link.target.x} ${link.target.y}`;
@@ -266,7 +262,7 @@ class VisualMapApp {
       viewport.appendChild(path);
     });
 
-    // 2. Draw SVG Nodes
+    // Draw SVG Nodes
     nodes.forEach(node => {
       const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
       group.setAttribute("class", "node-group");
@@ -275,44 +271,40 @@ class VisualMapApp {
 
       const nodeColor = node.color || "#6366f1";
       const isRoot = node.type === "root";
-      const circleRadius = isRoot ? 45 : (node.children ? 35 : 28);
+      const circleRadius = isMobile ? (isRoot ? 38 : (node.children ? 30 : 24)) : (isRoot ? 45 : (node.children ? 35 : 28));
 
-      // Node background glowing circle
       const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       circle.setAttribute("r", circleRadius);
       circle.setAttribute("fill", nodeColor);
-      circle.setAttribute("fill-opacity", "0.2");
+      circle.setAttribute("fill-opacity", "0.25");
       circle.setAttribute("stroke", nodeColor);
       circle.setAttribute("stroke-width", "2.5");
       circle.setAttribute("filter", "drop-shadow(0px 0px 8px " + nodeColor + ")");
 
-      // Node Inner Text
       const textEn = document.createElementNS("http://www.w3.org/2000/svg", "text");
       textEn.setAttribute("text-anchor", "middle");
       textEn.setAttribute("dy", "-2");
       textEn.setAttribute("fill", "#ffffff");
       textEn.setAttribute("font-weight", "600");
-      textEn.setAttribute("font-size", isRoot ? "13" : "11");
+      textEn.setAttribute("font-size", isMobile ? (isRoot ? "11" : "9.5") : (isRoot ? "13" : "11"));
       textEn.setAttribute("font-family", "Outfit, sans-serif");
-      textEn.textContent = node.label.length > 18 ? node.label.substring(0, 16) + '...' : node.label;
+      textEn.textContent = node.label.length > (isMobile ? 14 : 18) ? node.label.substring(0, isMobile ? 12 : 16) + '...' : node.label;
 
       const textEs = document.createElementNS("http://www.w3.org/2000/svg", "text");
       textEs.setAttribute("text-anchor", "middle");
-      textEs.setAttribute("dy", "13");
+      textEs.setAttribute("dy", "12");
       textEs.setAttribute("fill", "rgba(255,255,255,0.75)");
-      textEs.setAttribute("font-size", isRoot ? "10" : "9");
+      textEs.setAttribute("font-size", isMobile ? "8.5" : "9");
       textEs.setAttribute("font-family", "Inter, sans-serif");
-      textEs.textContent = node.labelEs.length > 18 ? node.labelEs.substring(0, 16) + '...' : node.labelEs;
+      textEs.textContent = node.labelEs.length > (isMobile ? 14 : 18) ? node.labelEs.substring(0, isMobile ? 12 : 16) + '...' : node.labelEs;
 
       group.appendChild(circle);
       group.appendChild(textEn);
       group.appendChild(textEs);
 
-      // Click event to inspect node
       group.addEventListener("click", (e) => {
         e.stopPropagation();
         this.selectNode(node);
-        // Highlight circle
         document.querySelectorAll(".node-group circle").forEach(c => c.setAttribute("stroke-width", "2.5"));
         circle.setAttribute("stroke-width", "5");
       });
@@ -358,7 +350,7 @@ class VisualMapApp {
       html += `
         <div class="info-card">
           <div class="info-card-label">💡 Uso / Significado</div>
-          <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-main);">
+          <p style="font-size: 0.88rem; line-height: 1.5; color: var(--text-main);">
             ${node.use || node.meaningEn || node.details}
           </p>
         </div>
@@ -397,10 +389,10 @@ class VisualMapApp {
       alert("Tu navegador no soporta síntesis de voz.");
       return;
     }
-    window.speechSynthesis.cancel(); // Stop current speaking
+    window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "en-US";
-    utterance.rate = 0.9; // Slightly slower for clear learning pronunciation
+    utterance.rate = 0.9;
     window.speechSynthesis.speak(utterance);
   }
 
@@ -426,10 +418,10 @@ class VisualMapApp {
           </button>
         </div>
         ${item.formula ? `<div class="formula-box">${item.formula}</div>` : ''}
-        ${item.meaningEn || item.use ? `<p style="font-size:0.85rem; color:var(--text-muted);">${item.meaningEn || item.use}</p>` : ''}
+        ${item.meaningEn || item.use ? `<p style="font-size:0.82rem; color:var(--text-muted);">${item.meaningEn || item.use}</p>` : ''}
         ${item.exampleEn ? `
           <div class="example-box">
-            <div class="example-en" style="font-size:0.9rem;">"${item.exampleEn}"</div>
+            <div class="example-en" style="font-size:0.88rem;">"${item.exampleEn}"</div>
             <div class="example-es">${item.exampleEs}</div>
           </div>
         ` : ''}
@@ -439,7 +431,6 @@ class VisualMapApp {
 
   // Practice & Quiz Engine
   startQuiz() {
-    // Generate questions from current dataset
     const questions = [];
     MINDMAPS_DATA.forEach(map => {
       const collect = (node) => {
@@ -455,7 +446,7 @@ class VisualMapApp {
       collect(map.rootNode);
     });
 
-    this.quizQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 5); // Pick 5 random questions
+    this.quizQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, 5);
     this.currentQuizIndex = 0;
     this.quizScore = 0;
 
@@ -474,7 +465,7 @@ class VisualMapApp {
         <div class="quiz-question-box">
           <h2 style="font-family:var(--font-heading); margin-bottom:0.5rem;">🎉 ¡Test Completado!</h2>
           <p style="font-size:1.1rem; color:var(--accent-success);">Puntuación: ${this.quizScore} / ${this.quizQuestions.length}</p>
-          <button class="btn-primary" style="margin-top:1.5rem;" onclick="app.startQuiz()">Repetir Práctica</button>
+          <button class="btn-primary" style="margin-top:1.25rem;" onclick="app.startQuiz()">Repetir Práctica</button>
         </div>
       `;
       return;
@@ -482,11 +473,11 @@ class VisualMapApp {
 
     const q = this.quizQuestions[this.currentQuizIndex];
     qBox.innerHTML = `
-      <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">
+      <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:600;">
         Pregunta ${this.currentQuizIndex + 1} de ${this.quizQuestions.length}
       </div>
       <div class="quiz-question-box">
-        <h3 style="font-family:var(--font-heading); font-size:1.2rem;">${q.question}</h3>
+        <h3 style="font-family:var(--font-heading); font-size:1.1rem;">${q.question}</h3>
       </div>
       <div class="quiz-options">
         ${q.options.map(opt => `
@@ -503,7 +494,7 @@ class VisualMapApp {
       this.quizScore++;
     }
     this.currentQuizIndex++;
-    setTimeout(() => this.renderQuizQuestion(), 400);
+    setTimeout(() => this.renderQuizQuestion(), 300);
   }
 
   handleSearch(query) {
@@ -512,7 +503,6 @@ class VisualMapApp {
       return;
     }
 
-    // Filter nodes matching query
     const mapData = MINDMAPS_DATA.find(m => m.id === this.currentMapId);
     if (!mapData) return;
 

@@ -1,4 +1,4 @@
-// Base de datos de Mapas Visuales para Aprender Inglés
+// Base de datos Completa y Expandida de Mapas Visuales para Aprender Inglés
 const MINDMAPS_DATA = [
   {
     id: "verb-tenses",
@@ -134,6 +134,68 @@ const MINDMAPS_DATA = [
     }
   },
   {
+    id: "conditionals-map",
+    title: "Conditionals Structure Map",
+    titleEs: "Estructura de Condicionales (0, 1st, 2nd, 3rd)",
+    category: "Grammar",
+    icon: "🔀",
+    color: "#8b5cf6",
+    description: "Comprende fácilmente los 4 tipos de oraciones condicionales en inglés.",
+    rootNode: {
+      id: "cond-root",
+      label: "Conditionals in English",
+      labelEs: "Oraciones Condicionales",
+      details: "Estructuras de causa y efecto para hechos reales, posibles, hipotéticos o pasados imposibles.",
+      type: "root",
+      children: [
+        {
+          id: "zero-cond",
+          label: "Zero Conditional 🧪",
+          labelEs: "Condicional Cero (Hechos)",
+          formula: "If + Present Simple, Present Simple",
+          use: "Verdades científicas, hechos universales y rutinas.",
+          exampleEn: "If you heat ice, it melts.",
+          exampleEs: "Si calientas hielo, se derrite.",
+          tip: "Puedes reemplazar 'If' por 'When' sin cambiar el significado.",
+          color: "#a78bfa"
+        },
+        {
+          id: "first-cond",
+          label: "1st Conditional 🔮",
+          labelEs: "Primer Condicional (Posibilidad Real)",
+          formula: "If + Present Simple, WILL + Verb",
+          use: "Situaciones reales o muy probables en el futuro.",
+          exampleEn: "If it rains tomorrow, we will stay at home.",
+          exampleEs: "Si llueve mañana, nos quedaremos en casa.",
+          tip: "Muy usado para advertencias y promesas.",
+          color: "#c4b5fd"
+        },
+        {
+          id: "second-cond",
+          label: "2nd Conditional 💭",
+          labelEs: "Segundo Condicional (Hipótesis Presente)",
+          formula: "If + Past Simple, WOULD + Verb",
+          use: "Situaciones hipotéticas, imaginarias o poco probables en el presente.",
+          exampleEn: "If I won the lottery, I would travel around the world.",
+          exampleEs: "Si ganara la lotería, viajaría por todo el mundo.",
+          tip: "Con el verbo TO BE se suele usar 'were' para todas las personas: 'If I were you...'",
+          color: "#ddd6fe"
+        },
+        {
+          id: "third-cond",
+          label: "3rd Conditional ⏳",
+          labelEs: "Tercer Condicional (Lamento Pasado)",
+          formula: "If + Past Perfect, WOULD HAVE + Past Participle",
+          use: "Situaciones pasadas imposibles de cambiar ('Lo que pudo haber sido').",
+          exampleEn: "If I had studied harder, I would have passed the exam.",
+          exampleEs: "Si hubiera estudiado más duro, habría aprobado el examen.",
+          tip: "Expresa arrepentimiento o reflexión sobre el pasado.",
+          color: "#ede9fe"
+        }
+      ]
+    }
+  },
+  {
     id: "phrasal-verbs-essential",
     title: "Essential Phrasal Verbs Map",
     titleEs: "Mapa de Phrasal Verbs Esenciales",
@@ -145,7 +207,7 @@ const MINDMAPS_DATA = [
       id: "pv-root",
       label: "Top Phrasal Verbs",
       labelEs: "Phrasal Verbs Imprescindibles",
-      details: "Un Phrasal Verb combina un verbo + preposición/adverbio, cambiando totalmente el significado original del verbo.",
+      details: "Un Phrasal Verb combina un verbo + preposición/adverbio, cambiando totalmente el significado original.",
       type: "root",
       children: [
         {
@@ -161,7 +223,7 @@ const MINDMAPS_DATA = [
               meaningEn: "To rise from bed after sleeping.",
               exampleEn: "I usually get up at 7:00 AM on weekdays.",
               exampleEs: "Normalmente me levanto a las 7:00 AM los días de semana.",
-              tip: "Diferencia con 'wake up' (despertar/abrir los ojos). 'Get up' implica salir físicamente de la cama.",
+              tip: "'Get up' implica salir físicamente de la cama.",
               color: "#fde68a"
             },
             {
@@ -183,6 +245,72 @@ const MINDMAPS_DATA = [
               exampleEs: "¿Te llevas bien con tus nuevos compañeros de trabajo?",
               tip: "Sinónimo: 'get on well with'.",
               color: "#fde68a"
+            }
+          ]
+        },
+        {
+          id: "pv-put",
+          label: "PUT 📌",
+          labelEs: "Con Verbo PUT",
+          color: "#f59e0b",
+          children: [
+            {
+              id: "pv-put-off",
+              label: "Put off",
+              labelEs: "Posponer / Procrastinar",
+              meaningEn: "To delay or postpone an event or task.",
+              exampleEn: "Don't put off until tomorrow what you can do today.",
+              exampleEs: "No pospongas para mañana lo que puedes hacer hoy.",
+              tip: "Muy usado en ámbitos personales y laborales.",
+              color: "#fcd34d"
+            },
+            {
+              id: "pv-put-on",
+              label: "Put on",
+              labelEs: "Ponerse ropa / Encender algo",
+              meaningEn: "To dress oneself with clothing or turn on a radio/TV.",
+              exampleEn: "Put on your coat! It is very cold outside.",
+              exampleEs: "¡Ponte el abrigo! Hace mucho frío afuera.",
+              tip: "Lo opuesto es 'take off' (quitarse la ropa).",
+              color: "#fcd34d"
+            },
+            {
+              id: "pv-put-up-with",
+              label: "Put up with",
+              labelEs: "Tolerar / Soportar algo molesto",
+              meaningEn: "To tolerate or endure an unpleasant situation.",
+              exampleEn: "I cannot put up with this noise anymore!",
+              exampleEs: "¡Ya no puedo tolerar más este ruido!",
+              tip: "Frase de tres palabras imprescindible para expresar paciencia agotada.",
+              color: "#fcd34d"
+            }
+          ]
+        },
+        {
+          id: "pv-take",
+          label: "TAKE 🛫",
+          labelEs: "Con Verbo TAKE",
+          color: "#d97706",
+          children: [
+            {
+              id: "pv-take-off",
+              label: "Take off",
+              labelEs: "Despegar (Avión) / Quitarse ropa / Tener éxito repentino",
+              meaningEn: "When a plane leaves the ground OR removing clothes.",
+              exampleEn: "The plane will take off in ten minutes.",
+              exampleEs: "El avión despegará en diez minutos.",
+              tip: "Tiene múltiples usos: volar, ropa y despegue de proyectos.",
+              color: "#fbbf24"
+            },
+            {
+              id: "pv-take-after",
+              label: "Take after",
+              labelEs: "Parecerse a un familiar",
+              meaningEn: "To resemble a parent or relative in appearance or character.",
+              exampleEn: "She really takes after her mother; both love singing.",
+              exampleEs: "Realmente se parece a su madre; a ambas les encanta cantar.",
+              tip: "Utilízalo cuando hables de rasgos o personalidad heredada.",
+              color: "#fbbf24"
             }
           ]
         },
@@ -223,34 +351,64 @@ const MINDMAPS_DATA = [
               color: "#fb923c"
             }
           ]
+        }
+      ]
+    }
+  },
+  {
+    id: "false-friends",
+    title: "False Friends & Cognates Map",
+    titleEs: "Falsos Amigos (False Friends)",
+    category: "Vocabulary",
+    icon: "⚠️",
+    color: "#ef4444",
+    description: "Evita los errores más comunes al traducir palabras engañosas entre español e inglés.",
+    rootNode: {
+      id: "ff-root",
+      label: "False Cognates ⚠️",
+      labelEs: "Falsos Amigos en Inglés",
+      details: "Palabras en inglés que se parecen a palabras en español pero tienen significados totalmente diferentes.",
+      type: "root",
+      children: [
+        {
+          id: "ff-actual",
+          label: "Actually vs Actualmente",
+          labelEs: "Actually ≠ Actualmente",
+          meaningEn: "'Actually' means 'En realidad / De hecho'.",
+          exampleEn: "Actually, I am not tired; I'm just relaxed.",
+          exampleEs: "En realidad, no estoy cansado; solo estoy relajado.",
+          tip: "Para decir 'actualmente', usa 'Currently' o 'Nowadays'.",
+          color: "#f87171"
         },
         {
-          id: "pv-turn",
-          label: "TURN 🔄",
-          labelEs: "Con Verbo TURN",
-          color: "#ef4444",
-          children: [
-            {
-              id: "pv-turn-on-off",
-              label: "Turn on / off",
-              labelEs: "Encender / Apagar (Dispositivos)",
-              meaningEn: "To start or stop a device or machine.",
-              exampleEn: "Please turn off the lights before leaving the room.",
-              exampleEs: "Por favor apaga las luces antes de salir de la habitación.",
-              tip: "También se usa 'switch on / switch off'.",
-              color: "#f87171"
-            },
-            {
-              id: "pv-turn-up-down",
-              label: "Turn up / down",
-              labelEs: "Subir / Bajar volumen o intensidad / Rechazar",
-              meaningEn: "To increase or decrease volume/heat, OR to reject an offer.",
-              exampleEn: "Turn up the music! Also, he turned down the job offer.",
-              exampleEs: "¡Sube la música! Además, él rechazó la oferta de trabajo.",
-              tip: "Tiene doble significado: volumen/potencia y rechazar propuestas.",
-              color: "#f87171"
-            }
-          ]
+          id: "ff-assist",
+          label: "Assist vs Asistir",
+          labelEs: "Assist ≠ Asistir a un evento",
+          meaningEn: "'Assist' means 'Ayudar'. To go to an event is 'Attend'.",
+          exampleEn: "I attended the conference and assisted the presenter.",
+          exampleEs: "Asistí a la conferencia y ayudé al presentador.",
+          tip: "'Assist' = Ayudar. 'Attend' = Asistir/Ir a una reunión o evento.",
+          color: "#f87171"
+        },
+        {
+          id: "ff-embarrassed",
+          label: "Embarrassed vs Embarazada",
+          labelEs: "Embarrassed ≠ Embarazada",
+          meaningEn: "'Embarrassed' means 'Avergonzado/a'.",
+          exampleEn: "She felt embarrassed when she dropped her glass.",
+          exampleEs: "Se sintió avergonzada cuando se le cayó el vaso.",
+          tip: "Para decir 'embarazada', usa 'Pregnant'.",
+          color: "#f87171"
+        },
+        {
+          id: "ff-exit",
+          label: "Exit vs Éxito",
+          labelEs: "Exit ≠ Éxito",
+          meaningEn: "'Exit' means 'Salida'. 'Success' means 'Éxito'.",
+          exampleEn: "The emergency exit is on the left. The launch was a big success!",
+          exampleEs: "La salida de emergencia está a la izquierda. ¡El lanzamiento fue un gran éxito!",
+          tip: "'Exit' = Salida. 'Success' = Éxito.",
+          color: "#f87171"
         }
       ]
     }
@@ -409,6 +567,54 @@ const MINDMAPS_DATA = [
               color: "#f472b6"
             }
           ]
+        }
+      ]
+    }
+  },
+  {
+    id: "pronunciation-connected-speech",
+    title: "Pronunciation & Connected Speech Map",
+    titleEs: "Pronunciación y Sonidos Conectados",
+    category: "Pronunciation",
+    icon: "🔊",
+    color: "#14b8a6",
+    description: "Aprende el sonido Schwa, letras silenciosas y cómo suenan los nativos al enlazar palabras.",
+    rootNode: {
+      id: "phon-root",
+      label: "Connected Speech 🔊",
+      labelEs: "Pronunciación Fluida",
+      details: "Los hablantes nativos enlazan palabras de forma natural para hablar más rápido.",
+      type: "root",
+      children: [
+        {
+          id: "phon-linking",
+          label: "Linking Words 🔗",
+          labelEs: "Enlace de Palabras",
+          meaningEn: "Connecting the end of one word to the start of the next.",
+          exampleEn: "An apple ➔ 'A-napple'. Turn off ➔ 'Tur-noff'.",
+          exampleEs: "Cuando una palabra termina en consonante y la siguiente empieza en vocal, se unen.",
+          tip: "Escucha cómo 'pick it up' suena como una sola palabra: 'pi-ki-tup'.",
+          color: "#5eead4"
+        },
+        {
+          id: "phon-silent",
+          label: "Silent Letters 🤐",
+          labelEs: "Letras Silenciosas",
+          meaningEn: "Letters that are written but NOT pronounced.",
+          exampleEn: "Knife (K silenciosa), Doubt (B silenciosa), Listen (T silenciosa).",
+          exampleEs: "Cuchillo (naif), Duda (daut), Escuchar (lisen).",
+          tip: "¡La 'K' antes de 'N' nunca se pronuncia! (Know, Knee, Knight).",
+          color: "#5eead4"
+        },
+        {
+          id: "phon-schwa",
+          label: "The Schwa Sound /ə/ 🗣️",
+          labelEs: "El Sonido Schwa (/ə/)",
+          meaningEn: "The most common weak vowel sound in spoken English.",
+          exampleEn: "About (uh-bout), Chocolate (choc-lut), Teacher (tea-chuh).",
+          exampleEs: "Un sonido relajado y neutro 'uh' presente en la mayoría de sílabas no acentuadas.",
+          tip: "Dominar el sonido Schwa le dará a tu inglés un ritmo nativo inmediato.",
+          color: "#5eead4"
         }
       ]
     }
