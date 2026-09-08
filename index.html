@@ -3,26 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mapas Visuales para Aprender Inglés | Interactive English Mind Maps</title>
-  <meta name="description" content="Aprende inglés de forma visual e interactiva con mapas conceptuales de gramática, phrasal verbs, vocabulario, modismos y pronunciación.">
+  <title>Afiches & Mapas Visuales para Aprender Inglés | Interactive English Posters</title>
+  <meta name="description" content="Aprende inglés con afiches visuales ilustrados, mapas conceptuales, vocabulario, modismos y pronunciación nativa.">
   
-  <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="styles.css">
-  
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body data-theme="dark">
 
-  <!-- Navbar Navigation Header -->
+  <!-- Navbar Header -->
   <header class="navbar">
     <div class="brand">
-      <span class="brand-icon">🧠</span>
+      <span class="brand-icon">🎨</span>
       <div class="brand-text">
-        <h1>Visual English Maps</h1>
-        <p>Aprende Inglés Visualmente</p>
+        <h1>Visual English Posters</h1>
+        <p>Afiches & Mapas Visuales Educativos</p>
       </div>
     </div>
     
@@ -38,23 +35,23 @@
 
   <!-- Controls & Category Filters -->
   <section class="controls-bar">
-    <!-- Category Filter Tabs -->
     <div class="category-tabs" id="category-tabs">
-      <!-- Dynamic Category Tabs injected by JS -->
+      <!-- Dynamic Category Tabs -->
     </div>
 
-    <!-- Search Input -->
     <div class="search-box">
-      <input type="text" id="search-input" placeholder="Buscar concepto o palabra...">
+      <input type="text" id="search-input" placeholder="Buscar vocabulario o frase...">
     </div>
 
-    <!-- View Mode Switcher -->
     <div class="view-toggle">
-      <button class="toggle-btn active" data-view="mindmap">
+      <button class="toggle-btn active" data-view="poster">
+        🖼️ Afiche / Poster
+      </button>
+      <button class="toggle-btn" data-view="mindmap">
         🕸️ Mapa Mental
       </button>
       <button class="toggle-btn" data-view="cards">
-        🎴 Fichas / Cards
+        🎴 Fichas
       </button>
     </div>
   </section>
@@ -62,18 +59,16 @@
   <!-- Main Viewport Layout Area -->
   <main class="main-container">
     
-    <!-- SVG Interactive Canvas View -->
-    <div class="canvas-wrapper" id="canvas-wrapper">
-      
-      <!-- Top Active Map Chips Selector -->
-      <div class="map-selector-bar" id="map-chips-bar">
-        <!-- Dynamic Map Chips injected by JS -->
-      </div>
+    <!-- Poster Infographic Board View (Inspired by Reference Image!) -->
+    <div class="poster-view-container" id="posters-view">
+      <!-- Dynamic Illustrated Poster Board injected by JS -->
+    </div>
 
-      <!-- SVG Mindmap Element -->
+    <!-- SVG Interactive Canvas View -->
+    <div class="canvas-wrapper" id="canvas-wrapper" style="display: none;">
+      <div class="map-selector-bar" id="map-chips-bar"></div>
       <svg id="mindmap-svg"></svg>
 
-      <!-- Floating Zoom Controls -->
       <div class="canvas-controls">
         <button class="icon-btn" id="zoom-in-btn" title="Acercar (+)">➕</button>
         <button class="icon-btn" id="zoom-out-btn" title="Alejar (-)">➖</button>
@@ -81,40 +76,31 @@
       </div>
     </div>
 
-    <!-- Cards / Grid View (Alternative View) -->
-    <div class="cards-view-container" id="cards-view" style="display: none;">
-      <!-- Dynamic Flashcard Cards injected by JS -->
-    </div>
+    <!-- Cards Grid View -->
+    <div class="cards-view-container" id="cards-view" style="display: none;"></div>
 
-    <!-- Right/Bottom Drawer - Node Inspector Details -->
+    <!-- Node Inspector Bottom Sheet / Drawer -->
     <aside class="node-drawer collapsed" id="node-drawer">
       <div class="drawer-header">
-        <span class="drawer-title-badge" id="drawer-type-badge">Detalle del Nodo</span>
+        <span class="drawer-title-badge" id="drawer-type-badge">Detalle del Concepto</span>
         <button class="icon-btn" id="close-drawer-btn" title="Cerrar panel">✖</button>
       </div>
-
-      <div class="drawer-body" id="drawer-content">
-        <!-- Dynamic node details rendered here -->
-      </div>
+      <div class="drawer-body" id="drawer-content"></div>
     </aside>
 
   </main>
 
-  <!-- Quiz / Practice Modal -->
+  <!-- Quiz Practice Modal -->
   <div class="modal-backdrop" id="quiz-modal">
     <div class="quiz-modal">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2 style="font-family: var(--font-heading); font-size: 1.2rem;">🎯 Práctica de Flashcards</h2>
+        <h2 style="font-family: var(--font-heading); font-size: 1.2rem;">🎯 Práctica de Vocabulario</h2>
         <button class="icon-btn" id="close-quiz-btn">✖</button>
       </div>
-      
-      <div id="quiz-content">
-        <!-- Dynamic Quiz Question rendered here -->
-      </div>
+      <div id="quiz-content"></div>
     </div>
   </div>
 
-  <!-- Scripts -->
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
