@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapas Visuales para Aprender Inglés | Interactive English Mind Maps</title>
+  <meta name="description" content="Aprende inglés de forma visual e interactiva con mapas conceptuales de gramática, phrasal verbs, vocabulario, modismos y pronunciación.">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body data-theme="dark">
+
+  <!-- Navbar Navigation Header -->
+  <header class="navbar">
+    <div class="brand">
+      <span class="brand-icon">🧠</span>
+      <div class="brand-text">
+        <h1>Visual English Maps</h1>
+        <p>Aprende Inglés Visualmente</p>
+      </div>
+    </div>
+    
+    <div class="nav-actions">
+      <button class="btn-primary" id="start-quiz-btn">
+        🎯 Modo Práctica
+      </button>
+      <button class="btn-secondary" id="theme-toggle-btn" title="Cambiar Tema">
+        🌙 / ☀️
+      </button>
+    </div>
+  </header>
+
+  <!-- Controls & Category Filters -->
+  <section class="controls-bar">
+    <!-- Category Filter Tabs -->
+    <div class="category-tabs" id="category-tabs">
+      <!-- Dynamic Category Tabs injected by JS -->
+    </div>
+
+    <!-- Search Input -->
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Buscar concepto, verbo o regla...">
+    </div>
+
+    <!-- View Mode Switcher -->
+    <div class="view-toggle">
+      <button class="toggle-btn active" data-view="mindmap">
+        🕸️ Mapa Mental
+      </button>
+      <button class="toggle-btn" data-view="cards">
+        🎴 Fichas / Cards
+      </button>
+    </div>
+  </section>
+
+  <!-- Main Viewport Layout Area -->
+  <main class="main-container">
+    
+    <!-- SVG Interactive Canvas View -->
+    <div class="canvas-wrapper" id="canvas-wrapper">
+      
+      <!-- Top Active Map Chips Selector -->
+      <div class="map-selector-bar" id="map-chips-bar">
+        <!-- Dynamic Map Chips injected by JS -->
+      </div>
+
+      <!-- SVG Mindmap Element -->
+      <svg id="mindmap-svg"></svg>
+
+      <!-- Floating Zoom Controls -->
+      <div class="canvas-controls">
+        <button class="icon-btn" id="zoom-in-btn" title="Acercar (+)">➕</button>
+        <button class="icon-btn" id="zoom-out-btn" title="Alejar (-)">➖</button>
+        <button class="icon-btn" id="zoom-reset-btn" title="Restablecer vista">🎯</button>
+      </div>
+    </div>
+
+    <!-- Cards / Grid View (Alternative View) -->
+    <div class="cards-view-container" id="cards-view" style="display: none;">
+      <!-- Dynamic Flashcard Cards injected by JS -->
+    </div>
+
+    <!-- Right Drawer - Node Inspector Details -->
+    <aside class="node-drawer collapsed" id="node-drawer">
+      <div class="drawer-header">
+        <span class="drawer-title-badge" id="drawer-type-badge">Detalle del Nodo</span>
+        <button class="icon-btn" id="close-drawer-btn" title="Cerrar panel">✖</button>
+      </div>
+
+      <div class="drawer-body" id="drawer-content">
+        <!-- Dynamic node details rendered here -->
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Quiz / Practice Modal -->
+  <div class="modal-backdrop" id="quiz-modal">
+    <div class="quiz-modal">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="font-family: var(--font-heading); font-size: 1.25rem;">🎯 Práctica de Flashcards</h2>
+        <button class="icon-btn" id="close-quiz-btn">✖</button>
+      </div>
+      
+      <div id="quiz-content">
+        <!-- Dynamic Quiz Question rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
