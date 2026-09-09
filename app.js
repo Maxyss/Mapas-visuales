@@ -1,9 +1,10 @@
-// Lógica y Renderizador de Mapas e Infografías Afiche Ilustradas para Aprender Inglés
+// Lógica y Renderizador de Afiches e Infografías (Niveles A1 hasta C1 Avanzado)
 
 class VisualMapApp {
   constructor() {
+    this.currentLevel = "All"; // "All", "A1-A2", "B1-B2", "C1 Advanced"
     this.currentCategory = "All";
-    this.currentView = "poster"; // Default "poster", "mindmap", or "cards"
+    this.currentView = "poster"; // "poster", "mindmap", or "cards"
     this.currentMapId = POSTER_INFOGRAPHICS[0].id;
     this.selectedNode = null;
     this.zoomLevel = 1;
@@ -38,6 +39,7 @@ class VisualMapApp {
     this.drawer = document.getElementById("node-drawer");
     this.mapChipsBar = document.getElementById("map-chips-bar");
     this.categoryTabs = document.getElementById("category-tabs");
+    this.levelTabs = document.getElementById("level-tabs");
     this.searchInput = document.getElementById("search-input");
     this.quizModal = document.getElementById("quiz-modal");
   }
@@ -58,6 +60,17 @@ class VisualMapApp {
         target.classList.add("active");
         this.currentView = target.dataset.view;
         this.switchViewMode();
+      });
+    });
+
+    // Level Filter Tabs (A1-A2, B1-B2, C1 Advanced)
+    this.levelTabs?.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        this.levelTabs.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        const target = e.currentTarget;
+        target.classList.add("active");
+        this.currentLevel = target.dataset.level;
+        this.loadCurrentView();
       });
     });
 
@@ -141,7 +154,7 @@ class VisualMapApp {
     
     this.categoryTabs.innerHTML = categories.map(cat => `
       <button class="tab-btn ${this.currentCategory === cat ? 'active' : ''}" data-cat="${cat}">
-        ${cat === 'All' ? '🌟 Todos' : cat}
+        ${cat === 'All' ? '🌟 Temas' : cat}
       </button>
     `).join("");
 
@@ -165,7 +178,11 @@ class VisualMapApp {
     if (this.currentView === "poster") {
       this.renderPosterInfographics();
     } else if (this.currentView === "mindmap") {
-      const mapData = MINDMAPS_DATA.find(m => m.id === this.currentMapId) || MINDMAPS_DATA[0];
+      let filteredMaps = MINDMAPS_DATA;
+      if (this.currentLevel !== "All") {
+        filteredMaps = filteredMaps.filter(m => m.level === this.currentLevel);
+      }
+      const mapData = filteredMaps.find(m => m.id === this.currentMapId) || filteredMaps[0] || MINDMAPS_DATA[0];
       this.renderMindMapSVG(mapData.rootNode);
     } else {
       const mapData = MINDMAPS_DATA[0];
@@ -173,9 +190,12 @@ class VisualMapApp {
     }
   }
 
-  // Render Infographic Poster Board (Exact Visual Poster Style like Reference Image!)
+  // Render Infographic Poster Board with Level Badges (A1 - C1)
   renderPosterInfographics() {
     let items = POSTER_INFOGRAPHICS;
+    if (this.currentLevel !== "All") {
+      items = items.filter(p => p.level === this.currentLevel);
+    }
     if (this.currentCategory !== "All") {
       items = items.filter(p => p.category === this.currentCategory);
     }
@@ -185,8 +205,11 @@ class VisualMapApp {
     this.postersContainer.innerHTML = items.map(poster => `
       <article class="poster-board" style="--poster-border-color: ${poster.borderColor}">
         
-        <!-- Poster Title Header -->
+        <!-- Poster Title Header & CEFR Level Badge -->
         <header class="poster-header">
+          <span style="font-size:0.75rem; font-weight:700; background:var(--accent-primary); color:#fff; padding:0.25rem 0.75rem; border-radius:12px; display:inline-block; margin-bottom:0.4rem;">
+            NIVEL CEFR: ${poster.level || "A1-C1"}
+          </span>
           <h1 class="poster-main-title">
             ${poster.icon} ${poster.title}
           </h1>
@@ -209,17 +232,16 @@ class VisualMapApp {
           </div>
         </section>
 
-        <!-- Main Poster Grid: Status Cards & Why Important -->
+        <!-- Main Poster Grid -->
         <div class="poster-grid-2">
           
-          <!-- Weather Condition Status Grid -->
           <div>
             <div class="poster-banner-title" style="--banner-bg: #ff6b6b">
-              ❓ WHAT IS THE WEATHER LIKE?
+              ❓ KEY EXPRESSIONS / PHRASES
             </div>
             <div class="poster-grid-cards">
               ${poster.weatherTypes.map(w => `
-                <div class="poster-card" onclick="app.speakText('${w.audio.replace(/'/g, "\\'")}')" title="Clic para escuchar pronunciación">
+                <div class="poster-card" onclick="app.speakText('${w.audio.replace(/'/g, "\\'")}')" title="Clic para escuchar">
                   <span class="poster-card-icon">${w.icon}</span>
                   <span class="poster-card-title">${w.titleEn}</span>
                   <span class="poster-card-sub">${w.titleEs}</span>
@@ -228,10 +250,9 @@ class VisualMapApp {
             </div>
           </div>
 
-          <!-- Why Important List -->
           <div>
             <div class="poster-banner-title" style="--banner-bg: #4ecdc4">
-              💡 WHY IS WEATHER IMPORTANT?
+              💡 CONTEXT & EXAMPLES
             </div>
             <div class="poster-info-list">
               ${poster.whyImportant.map(info => `
@@ -251,7 +272,7 @@ class VisualMapApp {
         <!-- Section: Vocabulary Words -->
         <div>
           <div class="poster-banner-title" style="--banner-bg: #10b981">
-            📖 VOCABULARY WORDS
+            📖 ESSENTIAL VOCABULARY
           </div>
           <div class="poster-grid-cards">
             ${poster.vocabWords.map(v => `
@@ -263,46 +284,25 @@ class VisualMapApp {
           </div>
         </div>
 
-        <!-- Section: What Can I Do? & Dos/Don'ts -->
-        <div class="poster-grid-2">
-          
-          <div>
-            <div class="poster-banner-title" style="--banner-bg: #8b5cf6">
-              🤷 WHAT CAN I DO?
+        <!-- Section: Dos & Don'ts / Best Practices -->
+        <div>
+          <div class="poster-banner-title" style="--banner-bg: #f59e0b">
+            ⭐ DOS AND DON'TS & TIPS
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); padding:0.85rem; border-radius:var(--radius-md);">
+              <strong style="color:var(--accent-success); display:block; margin-bottom:0.3rem;">✅ RECOMMENDED (BEST PRACTICE)</strong>
+              <ul style="padding-left:1.2rem; font-size:0.85rem; color:var(--text-main);">
+                ${poster.dosAndDonts.good.map(g => `<li>${g}</li>`).join("")}
+              </ul>
             </div>
-            <div class="poster-info-list">
-              ${poster.whatCanIDo.map(act => `
-                <div class="poster-info-item" onclick="app.speakText('${act.textEn.replace(/'/g, "\\'")}')">
-                  <span class="poster-info-icon">${act.icon}</span>
-                  <div>
-                    <div style="font-weight:600; color:var(--text-main);">${act.textEn}</div>
-                    <div style="font-size:0.78rem; color:var(--text-muted);">${act.textEs}</div>
-                  </div>
-                </div>
-              `).join("")}
+            <div style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); padding:0.85rem; border-radius:var(--radius-md);">
+              <strong style="color:var(--accent-danger); display:block; margin-bottom:0.3rem;">❌ AVOID (COMMON MISTAKES)</strong>
+              <ul style="padding-left:1.2rem; font-size:0.85rem; color:var(--text-main);">
+                ${poster.dosAndDonts.bad.map(b => `<li>${b}</li>`).join("")}
+              </ul>
             </div>
           </div>
-
-          <div>
-            <div class="poster-banner-title" style="--banner-bg: #f59e0b">
-              ⭐ REMEMBER & TIPS
-            </div>
-            <div style="display:flex; flex-direction:column; gap:0.5rem;">
-              <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); padding:0.75rem; border-radius:var(--radius-md);">
-                <strong style="color:var(--accent-success); display:block; margin-bottom:0.25rem;">✅ IT'S GOOD TO...</strong>
-                <ul style="padding-left:1.2rem; font-size:0.85rem; color:var(--text-main);">
-                  ${poster.dosAndDonts.good.map(g => `<li>${g}</li>`).join("")}
-                </ul>
-              </div>
-              <div style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); padding:0.75rem; border-radius:var(--radius-md);">
-                <strong style="color:var(--accent-danger); display:block; margin-bottom:0.25rem;">❌ IT'S NOT GOOD TO...</strong>
-                <ul style="padding-left:1.2rem; font-size:0.85rem; color:var(--text-main);">
-                  ${poster.dosAndDonts.bad.map(b => `<li>${b}</li>`).join("")}
-                </ul>
-              </div>
-            </div>
-          </div>
-
         </div>
 
       </article>
@@ -528,9 +528,9 @@ class VisualMapApp {
     POSTER_INFOGRAPHICS.forEach(p => {
       p.weatherTypes.forEach(w => {
         questions.push({
-          question: `¿Qué significa "${w.titleEn}"?`,
+          question: `[Nivel ${p.level}] ¿Qué significa "${w.titleEn}"?`,
           correct: w.titleEs,
-          options: this.shuffleOptions([w.titleEs, "Hace calor excesivo", "Llover fuertemente", "Mucho viento"])
+          options: this.shuffleOptions([w.titleEs, "A pesar de todo", "Procesos concurrentes", "Improbable de suceder"])
         });
       });
     });
@@ -552,7 +552,7 @@ class VisualMapApp {
     if (this.currentQuizIndex >= this.quizQuestions.length) {
       qBox.innerHTML = `
         <div class="quiz-question-box">
-          <h2 style="font-family:var(--font-heading); margin-bottom:0.5rem;">🎉 ¡Test Completado!</h2>
+          <h2 style="font-family:var(--font-heading); margin-bottom:0.5rem;">🎉 ¡Test A1 - C1 Completado!</h2>
           <p style="font-size:1.1rem; color:var(--accent-success);">Puntuación: ${this.quizScore} / ${this.quizQuestions.length}</p>
           <button class="btn-primary" style="margin-top:1.25rem;" onclick="app.startQuiz()">Repetir Práctica</button>
         </div>

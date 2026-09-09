@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Afiches & Mapas Visuales para Aprender Inglés | Interactive English Posters</title>
-  <meta name="description" content="Aprende inglés con afiches visuales ilustrados, mapas conceptuales, vocabulario, modismos y pronunciación nativa.">
+  <title>Afiches & Mapas Visuales A1 a C1 | Interactive English Learning</title>
+  <meta name="description" content="Aprende inglés desde A1 hasta nivel C1 Avanzado con afiches ilustrados, mapas conceptuales, colocaciones C1, inversión gramatical y audio nativo.">
   
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,10 +16,10 @@
   <!-- Navbar Header -->
   <header class="navbar">
     <div class="brand">
-      <span class="brand-icon">🎨</span>
+      <span class="brand-icon">🎓</span>
       <div class="brand-text">
-        <h1>Visual English Posters</h1>
-        <p>Afiches & Mapas Visuales Educativos</p>
+        <h1>Visual English (A1 ➔ C1)</h1>
+        <p>Afiches & Mapas desde Principiante a C1 Avanzado</p>
       </div>
     </div>
     
@@ -33,19 +33,27 @@
     </div>
   </header>
 
-  <!-- Controls & Category Filters -->
+  <!-- Controls & Level Filters -->
   <section class="controls-bar">
-    <div class="category-tabs" id="category-tabs">
-      <!-- Dynamic Category Tabs -->
+    
+    <!-- Level Selector Filter Tabs (A1-A2, B1-B2, C1) -->
+    <div class="level-tabs" id="level-tabs" style="display: flex; gap: 0.35rem;">
+      <button class="tab-btn active" data-level="All">🌟 Todos los Niveles</button>
+      <button class="tab-btn" data-level="A1-A2">🟢 A1-A2 (Básico)</button>
+      <button class="tab-btn" data-level="B1-B2">🔵 B1-B2 (Intermedio)</button>
+      <button class="tab-btn" data-level="C1 Advanced">🟣 C1 (Avanzado)</button>
     </div>
 
+    <!-- Category Filter Tabs -->
+    <div class="category-tabs" id="category-tabs"></div>
+
     <div class="search-box">
-      <input type="text" id="search-input" placeholder="Buscar vocabulario o frase...">
+      <input type="text" id="search-input" placeholder="Buscar concepto A1-C1...">
     </div>
 
     <div class="view-toggle">
       <button class="toggle-btn active" data-view="poster">
-        🖼️ Afiche / Poster
+        🖼️ Afiches / Posters
       </button>
       <button class="toggle-btn" data-view="mindmap">
         🕸️ Mapa Mental
@@ -59,10 +67,8 @@
   <!-- Main Viewport Layout Area -->
   <main class="main-container">
     
-    <!-- Poster Infographic Board View (Inspired by Reference Image!) -->
-    <div class="poster-view-container" id="posters-view">
-      <!-- Dynamic Illustrated Poster Board injected by JS -->
-    </div>
+    <!-- Poster Infographic Board View -->
+    <div class="poster-view-container" id="posters-view"></div>
 
     <!-- SVG Interactive Canvas View -->
     <div class="canvas-wrapper" id="canvas-wrapper" style="display: none;">
@@ -79,7 +85,7 @@
     <!-- Cards Grid View -->
     <div class="cards-view-container" id="cards-view" style="display: none;"></div>
 
-    <!-- Node Inspector Bottom Sheet / Drawer -->
+    <!-- Node Inspector Drawer -->
     <aside class="node-drawer collapsed" id="node-drawer">
       <div class="drawer-header">
         <span class="drawer-title-badge" id="drawer-type-badge">Detalle del Concepto</span>
@@ -94,7 +100,7 @@
   <div class="modal-backdrop" id="quiz-modal">
     <div class="quiz-modal">
       <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2 style="font-family: var(--font-heading); font-size: 1.2rem;">🎯 Práctica de Vocabulario</h2>
+        <h2 style="font-family: var(--font-heading); font-size: 1.2rem;">🎯 Test de Evaluación A1 - C1</h2>
         <button class="icon-btn" id="close-quiz-btn">✖</button>
       </div>
       <div id="quiz-content"></div>
